@@ -77,7 +77,7 @@ _AbstractRubikCube::_RevoleDegree
  		::_SolveRubikCube()
  		{
  		try {
- 			// _FrontSurface_Left();
+ 			_FrontSurface_Left();
  			} catch ( std::invalid_argument const& _Ex )
  				{
  				std::cerr << _Ex.what()
@@ -181,33 +181,8 @@ _AbstractRubikCube::_RevoleDegree
  								 , _RevoleDirection _Direction
  								 , _RevoleDegree _Degree )
  		{
- 		using _Layer = std::array< _Color, _Oders >;
-
- 		_Layer _TempTopLayer;
- 		for ( int _Index = 0; _Index < _Oders; _Index++ )
- 			_TempTopLayer.at( _Index ) =
- 				__surface[ 0 ].at( _Index );
-
- 		_Layer _TempBottomLayer;
- 		for ( int _Index = 0; _Index < _Oders; _Index++ )
- 			_TempBottomLayer.at( _Index ) = 
- 				__surface[ 2 ].at( _Index );
-
- 		_Layer _TempLeftLayer;
- 		for ( int _Index = 0; _Index < _Oders; _Index++ )
- 			_TempLeftLayer.at( _Index ) = 
- 				__surface[ _Index ].at( 0 );
-
- 		_Layer _TempRightLayer;
- 		for ( int _Index = 0; _Index < _Oders; _Index++ )
- 			_TempRightLayer.at( _Index ) = 
- 				__surface[ _Index ].at( 2 );
-
- 		__surface.at( 0 ).swap( _TempRightLayer );
- 		__surface.at( 2 ).swap( _TempLeftLayer );
-
  		// TODO
-
+ 		_RotateLeft90Degree( __surface );
 
  	// 	switch ( _Direction )
  	// 		{
@@ -293,6 +268,97 @@ _AbstractRubikCube::_RevoleDegree
 		::_BottomSurface_Right( _RevoleDegree _Degree )
 		{
 		// TODO
+		}
+
+	// _Rotate 90 degree
+	/* _RotateLeft90Degree() function */
+	void _3x3RubikCube
+		::_RotateLeft90Degree( _Surface& __surface )
+		{
+ 		using _Layer = std::array< _Color, _Oders >;
+
+ 		_Layer _TempTopLayer;
+ 		for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 			_TempTopLayer.at( _Index ) =
+ 				__surface[ 0 ].at( _Index );
+
+ 		_Layer _TempBottomLayer;
+ 		for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 			_TempBottomLayer.at( _Index ) = 
+ 				__surface[ 2 ].at( _Index );
+
+ 		_Layer _TempLeftLayer;
+ 		for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 			_TempLeftLayer.at( _Index ) = 
+ 				__surface[ _Index ].at( 0 );
+
+ 		_Layer _TempRightLayer;
+ 		for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 			_TempRightLayer.at( _Index ) = 
+ 				__surface[ _Index ].at( 2 );
+
+ 		__surface.at( 0 ).swap( _TempRightLayer );
+ 		__surface.at( 2 ).swap( _TempLeftLayer );
+
+ 		for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 			__surface[ _Index ][ 2 ] =
+ 				_TempRightLayer[ _Index ];
+
+  		for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 			__surface[ _Index ][ 0 ] =
+ 				_TempLeftLayer[ _Index ];
+#if 0
+ 		std::for_each( _TempTopLayer.rbegin(), _TempTopLayer.rend()
+ 					 , [ &__surface ]( _Color _Elem )
+ 					 	{
+ 					 	for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 					 		__surface[ _Index ][ 0 ] = _Elem;
+ 					 	}
+ 					 );
+
+ 		std::for_each( _TempBottomLayer.begin(), _TempBottomLayer.end()
+ 					 , [ &__surface ]( _Color _Elem )
+ 					 	{
+ 					 	for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 					 		__surface[ _Index ][ 2 ] = _Elem;
+ 					 	}
+ 					 );
+#endif
+		}
+
+	/* _RotateRight90Degree() function */
+	void _3x3RubikCube
+		::_RotateRight90Degree( _Surface& __surface )
+		{
+
+		}
+
+	/* _RotateLeft180Degree() function */
+	void _3x3RubikCube
+		::_RotateLeft180Degree( _Surface& __surface )
+		{
+
+		}
+
+	/* _RotateRight180Degree() function */
+	void _3x3RubikCube
+		::_RotateRight180Degree( _Surface& __surface )
+		{
+
+		}
+
+	/* _RotateLeft270Degree() function */
+	void _3x3RubikCube
+		::_RotateLeft270Degree( _Surface& __surface )
+		{
+
+		}
+
+	/* _RotateRight270Degree() function */
+	void _3x3RubikCube
+		::_RotateRight270Degree( _Surface& __surface )
+		{
+
 		}
 
  ////////////////////////////////////////////////////////////////////////////

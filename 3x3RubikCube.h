@@ -115,6 +115,51 @@ private:
 	virtual void 
 	_BottomSurface_Right( _RevoleDegree _Degree = _RevoleDegree::_90Degree ) override;
 
+	// Rotate 90 degree.
+	virtual void
+	_RotateLeft90Degree( _Surface& __surface ) override;
+
+	virtual void
+	_RotateForward90Degree( _Surface& __surface ) override
+		{ _RotateLeft90Degree( __surface ); }
+
+	virtual void
+	_RotateRight90Degree( _Surface& __surface ) override;
+
+	virtual void
+	_RotateBackward90Degree( _Surface& __surface ) override
+		{ _RotateRight90Degree( __surface ); }
+
+	// Rotate 180 degree.
+	virtual void
+	_RotateLeft180Degree( _Surface& __surface ) override;
+
+	virtual void
+	_RotateForward180Degree( _Surface& __surface ) override
+		{ _RotateLeft180Degree( __surface ); }
+
+	virtual void
+	_RotateRight180Degree( _Surface& __surface ) override;
+
+	virtual void
+	_RotateBackward180Degree( _Surface& __surface ) override
+		{ _RotateRight180Degree( __surface ); }
+
+	// Rotate 90 degree.
+	virtual void
+	_RotateLeft270Degree( _Surface& __surface ) override;
+
+	virtual void
+	_RotateForward270Degree( _Surface& __surface ) override
+		{ _RotateLeft270Degree( __surface ); }
+
+	virtual void
+	_RotateRight270Degree( _Surface& __surface ) override;
+
+	virtual void
+	_RotateBackward270Degree( _Surface& __surface ) override
+		{ _RotateRight270Degree( __surface ); }
+
 	_Surface m_FrontSurface;
 	_Surface m_RearSurface;
 	_Surface m_LeftSurface;

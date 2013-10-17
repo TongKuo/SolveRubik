@@ -164,6 +164,45 @@ private:
 	virtual void 
 	_BottomSurface_Right( _RevoleDegree _Degree = _RevoleDegree::_90Degree ) = 0;
 
+	// Rotate 90 degree.
+	virtual void
+	_RotateLeft90Degree( _Surface& __surface ) = 0;
+
+	virtual void
+	_RotateForward90Degree( _Surface& __surface ) = 0;
+
+	virtual void
+	_RotateRight90Degree( _Surface& __surface ) = 0;
+
+	virtual void
+	_RotateBackward90Degree( _Surface& __surface ) = 0;
+
+	// Rotate 180 degree.
+	virtual void
+	_RotateLeft180Degree( _Surface& __surface ) = 0;
+
+	virtual void
+	_RotateForward180Degree( _Surface& __surface ) = 0;
+
+	virtual void
+	_RotateRight180Degree( _Surface& __surface ) = 0;
+
+	virtual void
+	_RotateBackward180Degree( _Surface& __surface ) = 0;
+
+	// Rotate 90 degree.
+	virtual void
+	_RotateLeft270Degree( _Surface& __surface ) = 0;
+
+	virtual void
+	_RotateForward270Degree( _Surface& __surface ) = 0;
+
+	virtual void
+	_RotateRight270Degree( _Surface& __surface ) = 0;
+
+	virtual void
+	_RotateBackward270Degree( _Surface& __surface ) = 0;
+
 	_OperationMakers 	m_OperationMarkers;
 	_OperationFunctions m_OperationFunctions;
 	};

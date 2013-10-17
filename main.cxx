@@ -46,14 +46,16 @@ int main( int _Argc, char* *_Argv )
 	_Color _White = _Color::_White;
 
 	_3x3RubikCube _Cube
-		( { _Blue, _Blue, _Yellow, _Blue, _Red, _Yellow, _Green, _Red, _Orange }
-		, { _Green, _Yellow, _White, _Blue, _Orange, _Orange, _Orange, _Orange, _Green }
-		, { _Red, _Green, _White, _White, _Blue, _Red, _Red, _White, _White }
-		, { _Blue, _Green, _White, _Blue, _Green, _White, _Yellow, _Green, _Yellow }
-		, { _Blue, _Red, _Red, _Yellow, _Yellow, _Orange, _Orange, _Orange, _Red }
-		, { _Orange, _Green, _Blue, _Red, _White, _White, _Yellow, _Yellow, _Green }
-		);
+		{ { _Yellow, _Red, _Red, _Yellow, _Red, _Yellow, _Red, _Red, _Yellow }
+		, { _White, _Orange, _Green, _Yellow, _Orange, _Blue, _Green, _Orange, _Orange }
+		, { _Yellow, _Green, _Blue, _Yellow, _Blue, _Orange, _Blue, _Blue, _Blue }
+		, { _Yellow, _Red, _Red, _Red, _Green, _Green, _Orange, _Green, _White }
+		, { _Red, _Blue, _Green, _Orange, _Yellow, _Green, _Orange, _Blue, _Blue }
+		, { _White, _White, _Green, _White, _White, _White, _White, _White, _Orange }
+		};
 
+	_Cube._Print();
+	_Cube._SolveRubikCube();
 	_Cube._Print();
 #
 	return 0;
