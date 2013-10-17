@@ -42,7 +42,7 @@ _Pragma ( "once" );
  * This class is inherites from _AbstractRubikCube by public */
 class _3x3RubikCube : public _AbstractRubikCube
 	{
-public:				  
+public:
 	_3x3RubikCube( std::initializer_list< _Color > const& _Front
 				 , std::initializer_list< _Color > const& _Rear
 				 , std::initializer_list< _Color > const& _Left
@@ -51,6 +51,11 @@ public:
 				 , std::initializer_list< _Color > const& _Bottom
 				 );
 
+	enum class _SurfaceType { _Front, _Rear
+							, _Left, _Right
+							, _Top, _Bottom
+							};
+
 	// virtual ~_3x3RubikCube() { ; }
 
 	virtual _OperationMakers _SolveRubikCube() override;
@@ -58,6 +63,8 @@ public:
 
 private:
 	enum { _Oders = 3 };
+
+ 	using _Layer = std::array< _Color, _Oders >;
 
 	virtual void 
 	_InitializeSurface( std::initializer_list< _Color > const&
@@ -160,12 +167,30 @@ private:
 	_RotateBackward270Degree( _Surface& __surface ) override
 		{ _RotateRight270Degree( __surface ); }
 
+	_Layer _GetSurfaceTopLayer( _Surface const& )    const;
+	_Layer _GetSurfaceBottomLayer( _Surface const& ) const;
+	_Layer _GetSurfaceLeftLayer( _Surface const& )   const;
+	_Layer _GetSurfaceRightLayer( _Surface const& )  const;
+
+	_Layer _GetBroadSideTopLayer( _Surface const& )    const;
+	_Layer _GetBroadSideBottomLayer( _Surface const& ) const;
+	_Layer _GetBroadSideLeftLayer( _Surface const& )   const;
+	_Layer _GetBroadSideRightLayer( _Surface const& )  const;
+
+	_Layer _GetInvertLayer( _Layer const& ) const;
+
+	_SurfaceType _GetSurfaceType( _Surface const& ) const;
+
 	_Surface m_FrontSurface;
 	_Surface m_RearSurface;
 	_Surface m_LeftSurface;
 	_Surface m_RightSurface;
 	_Surface m_TopSurface;
 	_Surface m_BottomSurface;
+
+public:
+	_Layer _Test() const
+		{ return _GetBroadSideBottomLayer( m_LeftSurface ); }
 	};
 
  ////////////////////////////////////////////////////////////////////////////

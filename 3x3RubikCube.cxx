@@ -92,7 +92,7 @@ _AbstractRubikCube::_RevoleDegree
  	/* _Print() function */
  	void _3x3RubikCube::_Print() const
  		{
- 		_PrintSpecifiedSurface( m_TopSurface, "  \t  " );
+ 		_PrintSpecifiedSurface( m_TopSurface, "       " );
 
  		for ( int _Index = 0; _Index < _Oders; _Index++ )
  			{
@@ -107,7 +107,7 @@ _AbstractRubikCube::_RevoleDegree
  			std::cout << std::endl;
  			}
 
- 		_PrintSpecifiedSurface( m_BottomSurface, "  \t  " );
+ 		_PrintSpecifiedSurface( m_BottomSurface, "       " );
  		}
 
  	// ------------------ Private member functions ------------------- //
@@ -149,15 +149,17 @@ _AbstractRubikCube::_RevoleDegree
 						{
 						switch ( _Elem )
  							{
-						case _Color::_Red:    std::cout << "R  "; break;
-						case _Color::_Orange: std::cout << "O  "; break;
-						case _Color::_Blue:   std::cout << "B  "; break;
-						case _Color::_Green:  std::cout << "G  "; break;
-						case _Color::_Yellow: std::cout << "Y  "; break;
-						case _Color::_White:  std::cout << "W  "; break;
+						case _Color::_Red:    std::printf("\033[41;37m\033[4m \033[5m|"); break;
+						case _Color::_Orange: std::printf("\033[43;37m\033[4m \033[5m|"); break;
+						case _Color::_Blue:   std::printf("\033[44;37m\033[4m \033[5m|"); break;
+						case _Color::_Green:  std::printf("\033[42;33m\033[4m \033[5m|"); break;
+						case _Color::_Yellow: std::printf("\033[45;37m\033[4m \033[5m|"); break;
+						case _Color::_White:  std::printf("\033[47;30m\033[4m \033[5m|"); break;
 							}
 						}
 					 );
+
+ 		std::printf("\033[0m");
  		}
 
  	/* _InitializeSurface() function */
@@ -275,55 +277,22 @@ _AbstractRubikCube::_RevoleDegree
 	void _3x3RubikCube
 		::_RotateLeft90Degree( _Surface& __surface )
 		{
- 		using _Layer = std::array< _Color, _Oders >;
+ 		_Layer _LeftLayer = _GetSurfaceLeftLayer( __surface );
 
- 		_Layer _TempTopLayer;
- 		for ( int _Index = 0; _Index < _Oders; _Index++ )
- 			_TempTopLayer.at( _Index ) =
- 				__surface[ 0 ].at( _Index );
+ 		_Layer _RightLayer = _GetSurfaceRightLayer( __surface );
 
- 		_Layer _TempBottomLayer;
- 		for ( int _Index = 0; _Index < _Oders; _Index++ )
- 			_TempBottomLayer.at( _Index ) = 
- 				__surface[ 2 ].at( _Index );
-
- 		_Layer _TempLeftLayer;
- 		for ( int _Index = 0; _Index < _Oders; _Index++ )
- 			_TempLeftLayer.at( _Index ) = 
- 				__surface[ _Index ].at( 0 );
-
- 		_Layer _TempRightLayer;
- 		for ( int _Index = 0; _Index < _Oders; _Index++ )
- 			_TempRightLayer.at( _Index ) = 
- 				__surface[ _Index ].at( 2 );
-
- 		__surface.at( 0 ).swap( _TempRightLayer );
- 		__surface.at( 2 ).swap( _TempLeftLayer );
+ 		__surface.at( 0 ).swap( _RightLayer );
+ 		__surface.at( 2 ).swap( _LeftLayer );
 
  		for ( int _Index = 0; _Index < _Oders; _Index++ )
  			__surface[ _Index ][ 2 ] =
- 				_TempRightLayer[ _Index ];
+ 				_RightLayer[ _Index ];
 
   		for ( int _Index = 0; _Index < _Oders; _Index++ )
  			__surface[ _Index ][ 0 ] =
- 				_TempLeftLayer[ _Index ];
-#if 0
- 		std::for_each( _TempTopLayer.rbegin(), _TempTopLayer.rend()
- 					 , [ &__surface ]( _Color _Elem )
- 					 	{
- 					 	for ( int _Index = 0; _Index < _Oders; _Index++ )
- 					 		__surface[ _Index ][ 0 ] = _Elem;
- 					 	}
- 					 );
+ 				_LeftLayer[ _Index ];
 
- 		std::for_each( _TempBottomLayer.begin(), _TempBottomLayer.end()
- 					 , [ &__surface ]( _Color _Elem )
- 					 	{
- 					 	for ( int _Index = 0; _Index < _Oders; _Index++ )
- 					 		__surface[ _Index ][ 2 ] = _Elem;
- 					 	}
- 					 );
-#endif
+
 		}
 
 	/* _RotateRight90Degree() function */
@@ -359,6 +328,137 @@ _AbstractRubikCube::_RevoleDegree
 		::_RotateRight270Degree( _Surface& __surface )
 		{
 
+		}
+
+	/* _GetSurfaceTopLayer() function */
+	_3x3RubikCube::_Layer _3x3RubikCube
+		::_GetSurfaceTopLayer( _Surface const& __surface ) const
+		{
+ 		_Layer _TempTopLayer;
+ 		for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 			_TempTopLayer[ _Index ] =
+ 				__surface[ 0 ][ _Index ];
+
+ 		return _TempTopLayer;		
+		}
+
+	/* _GetSurfaceBottomLayer() function */
+	_3x3RubikCube::_Layer _3x3RubikCube
+		::_GetSurfaceBottomLayer( _Surface const& __surface ) const
+		{
+ 		_Layer _TempBottomLayer;
+ 		for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 			_TempBottomLayer[ _Index ] = 
+ 				__surface[ 2 ][ _Index ];
+
+ 		return _TempBottomLayer;
+		}
+
+	/* _GetSurfaceLeftLayer() function */
+	_3x3RubikCube::_Layer _3x3RubikCube
+		::_GetSurfaceLeftLayer( _Surface const& __surface ) const
+		{
+ 		_Layer _TempLeftLayer;
+ 		for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 			_TempLeftLayer[ _Index ] = 
+ 				__surface[ _Index ][ 0 ];
+
+ 		return _TempLeftLayer;
+		}
+
+	/* _GetSurfaceRightLayer() function */
+	_3x3RubikCube::_Layer _3x3RubikCube
+		::_GetSurfaceRightLayer( _Surface const& __surface ) const
+		{
+ 		_Layer _TempRightLayer;
+ 		for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 			_TempRightLayer[ _Index ] = 
+ 				__surface[ _Index ][ 2 ];
+
+ 		return _TempRightLayer;
+		}
+
+	/* _GetBroadSideTopLayer() function */
+	_3x3RubikCube::_Layer _3x3RubikCube
+		::_GetBroadSideTopLayer( _Surface const& __surface ) const
+		{
+		_SurfaceType _CurrentSurfaceType = _GetSurfaceType( __surface );
+
+		switch ( _CurrentSurfaceType )
+			{
+		case _SurfaceType::_Front:  return m_TopSurface[ 2 ];
+		case _SurfaceType::_Rear:   return _GetInvertLayer( m_TopSurface[ 0 ] );
+		case _SurfaceType::_Left:   return _GetSurfaceLeftLayer( m_TopSurface );
+		case _SurfaceType::_Right:  return _GetInvertLayer( _GetSurfaceRightLayer( m_TopSurface ) );
+		case _SurfaceType::_Top:    return _GetInvertLayer( m_RearSurface[ 0 ] );
+		case _SurfaceType::_Bottom: return _GetInvertLayer( m_FrontSurface[ 0 ] );
+			}
+		}
+
+	/* _GetBroadSideBottomLayer() function */
+	_3x3RubikCube::_Layer _3x3RubikCube
+		::_GetBroadSideBottomLayer( _Surface const& __surface ) const
+		{
+		_SurfaceType _CurrentSurfaceType = _GetSurfaceType( __surface );
+
+		switch ( _CurrentSurfaceType )
+			{
+		case _SurfaceType::_Front:  return m_BottomSurface [ 0 ];
+		case _SurfaceType::_Rear:   return _GetInvertLayer( m_BottomSurface [ 2 ] );
+		case _SurfaceType::_Left:   return _GetInvertLayer( _GetSurfaceLeftLayer( m_BottomSurface ) );
+		case _SurfaceType::_Right:  return _GetSurfaceRightLayer( m_BottomSurface );
+		case _SurfaceType::_Top:	return m_FrontSurface[ 0 ];
+		case _SurfaceType::_Bottom: return _GetInvertLayer( m_RearSurface [ 2 ] );
+			}
+		}
+
+	/* _GetBroadSideLeftLayer() function */
+	_3x3RubikCube::_Layer _3x3RubikCube
+		::_GetBroadSideLeftLayer( _Surface const& __surface ) const
+		{
+
+		}
+
+	/* _GetBroadSideRightLayer() function */
+	_3x3RubikCube::_Layer _3x3RubikCube
+		::_GetBroadSideRightLayer( _Surface const& __surface ) const
+		{
+
+		}
+
+	/* _GetInvertLayer() function */
+	_3x3RubikCube::_Layer _3x3RubikCube
+		::_GetInvertLayer( _Layer const& __layer ) const
+		{
+		_Layer _TempLayer;
+		int _Cnt = 0;
+
+		std::for_each( __layer.rbegin()
+					 , __layer.rend()
+					 , [ &_Cnt, &_TempLayer ]( _Color _Elem )
+					 	{ _TempLayer[ _Cnt++ ] = _Elem; }
+					 );
+
+		return _TempLayer;
+		}
+
+	/* _GetSurfaceType() function */
+	_3x3RubikCube::_SurfaceType _3x3RubikCube
+		::_GetSurfaceType( _Surface const& __surface ) const
+		{
+		/* According to the the center block's color 
+		 * to determine which is current surface */
+		_Color _CentralColor = __surface[ 1 ][ 1 ];
+
+		switch ( _CentralColor )
+			{
+		case _Color::_Red: 	  return _SurfaceType::_Front;
+		case _Color::_Orange: return _SurfaceType::_Rear;
+		case _Color::_Blue:   return _SurfaceType::_Left;
+		case _Color::_Green:  return _SurfaceType::_Right;
+		case _Color::_Yellow: return _SurfaceType::_Top;
+		case _Color::_White:  return _SurfaceType::_Bottom;
+			}
 		}
 
  ////////////////////////////////////////////////////////////////////////////
