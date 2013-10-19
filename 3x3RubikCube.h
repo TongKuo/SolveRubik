@@ -152,7 +152,10 @@ private:
 	_RotateBackward180Degree( _Surface& __surface ) override
 		{ _RotateRight180Degree( __surface ); }
 
-	// Rotate 90 degree.
+	virtual void
+	_DoRotate180Degree( _Surface& __surface ) override;
+
+	// Rotate 270 degree.
 	virtual void
 	_RotateLeft270Degree( _Surface& __surface ) override;
 
@@ -189,8 +192,8 @@ private:
 	_Surface m_BottomSurface;
 
 public:
-	_Layer _Test() const
-		{ return _GetBroadSideBottomLayer( m_LeftSurface ); }
+	void _Test()
+		{ _RotateLeft90Degree( m_TopSurface ); }
 	};
 
  ////////////////////////////////////////////////////////////////////////////

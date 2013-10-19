@@ -190,6 +190,9 @@ private:
 	virtual void
 	_RotateBackward180Degree( _Surface& __surface ) = 0;
 
+	virtual void
+	_DoRotate180Degree( _Surface& __surface ) = 0;
+
 	// Rotate 90 degree.
 	virtual void
 	_RotateLeft270Degree( _Surface& __surface ) = 0;

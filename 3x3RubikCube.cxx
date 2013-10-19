@@ -77,7 +77,7 @@ _AbstractRubikCube::_RevoleDegree
  		::_SolveRubikCube()
  		{
  		try {
- 			_FrontSurface_Left();
+ 			_FrontSurface_Right();
  			} catch ( std::invalid_argument const& _Ex )
  				{
  				std::cerr << _Ex.what()
@@ -184,7 +184,7 @@ _AbstractRubikCube::_RevoleDegree
  								 , _RevoleDegree _Degree )
  		{
  		// TODO
- 		_RotateLeft90Degree( __surface );
+ 		_RotateRight90Degree( __surface );
 
  	// 	switch ( _Direction )
  	// 		{
@@ -204,7 +204,8 @@ _AbstractRubikCube::_RevoleDegree
 	void _3x3RubikCube
 		::_FrontSurface_Right( _RevoleDegree _Degree )
 		{
-		// TODO
+		_RevoleSpecifiedSurface( m_FrontSurface
+							   , _RevoleDirection::_Right );
 		}
 
 	/* Rear surface */
@@ -277,57 +278,142 @@ _AbstractRubikCube::_RevoleDegree
 	void _3x3RubikCube
 		::_RotateLeft90Degree( _Surface& __surface )
 		{
+		// Rotate the surface
  		_Layer _LeftLayer = _GetSurfaceLeftLayer( __surface );
-
  		_Layer _RightLayer = _GetSurfaceRightLayer( __surface );
 
  		__surface.at( 0 ).swap( _RightLayer );
  		__surface.at( 2 ).swap( _LeftLayer );
 
+ 		_Layer _CurrentLeftLayer = _GetInvertLayer( _RightLayer );
+ 		_Layer _CurrentRightLayer = _GetInvertLayer( _LeftLayer );
+
  		for ( int _Index = 0; _Index < _Oders; _Index++ )
- 			__surface[ _Index ][ 2 ] =
- 				_RightLayer[ _Index ];
+ 			__surface[ _Index ][ 0 ] =
+ 				_CurrentLeftLayer[ _Index ];
 
   		for ( int _Index = 0; _Index < _Oders; _Index++ )
- 			__surface[ _Index ][ 0 ] =
- 				_LeftLayer[ _Index ];
+ 			__surface[ _Index ][ 2 ] =
+ 				_CurrentRightLayer[ _Index ];
 
+ 		// Rotate the broad side
+ 		_Layer _BroadSideTop = 
+ 			_GetInvertLayer( _GetBroadSideTopLayer( __surface ) );
+ 		_Layer _BroadSideBottom = 
+ 			_GetInvertLayer( _GetBroadSideBottomLayer( __surface ) );
+ 		_Layer _BroadSideLeft = 
+ 			_GetBroadSideLeftLayer( __surface );
+ 		_Layer _BroadSideRight = 
+ 			_GetBroadSideRightLayer( __surface );
 
+ 		_Surface* _OppositeLeftSurface = nullptr;
+ 		_Surface* _OppositeRightSurface = nullptr;
+ 		_Surface* _OppositeTopSurface = nullptr;
+ 		_Surface* _OppositeBottomSurface = nullptr;
+
+ 		_SurfaceType _CurrentSurfaceType = _GetSurfaceType( __surface );
+
+ 		switch ( _CurrentSurfaceType )
+ 			{
+		case _SurfaceType::_Front:
+			_OppositeLeftSurface = &m_LeftSurface; _OppositeRightSurface = &m_RightSurface;
+			_OppositeTopSurface = &m_TopSurface;   _OppositeBottomSurface = &m_BottomSurface;
+			break;
+
+		case _SurfaceType::_Rear:
+			_OppositeLeftSurface = &m_RightSurface; _OppositeRightSurface = &m_LeftSurface;
+			_OppositeTopSurface = &m_TopSurface;    _OppositeBottomSurface = &m_BottomSurface;
+			break;
+
+		case _SurfaceType::_Left:  
+			_OppositeLeftSurface = &m_RearSurface; _OppositeRightSurface = &m_FrontSurface;
+			_OppositeTopSurface = &m_TopSurface;   _OppositeBottomSurface = &m_BottomSurface;
+			break;
+
+		case _SurfaceType::_Right:  
+			_OppositeLeftSurface = &m_FrontSurface; _OppositeRightSurface = &m_RearSurface;
+			_OppositeTopSurface = &m_TopSurface;    _OppositeBottomSurface = &m_BottomSurface;
+			break;
+
+		case _SurfaceType::_Top:
+			_OppositeLeftSurface = &m_LeftSurface; _OppositeRightSurface = &m_RightSurface;
+			_OppositeTopSurface = &m_RearSurface;  _OppositeBottomSurface = &m_FrontSurface;
+			break;
+
+		case _SurfaceType::_Bottom:
+			_OppositeLeftSurface = &m_LeftSurface; _OppositeRightSurface = &m_RightSurface;
+			_OppositeTopSurface = &m_FrontSurface; _OppositeBottomSurface = &m_BottomSurface;
+			break;
+ 			}
+
+ 		( *_OppositeTopSurface )[ 2 ].swap( _BroadSideRight );
+ 		( *_OppositeBottomSurface )[ 0 ].swap( _BroadSideLeft );
+#if 0   // DEBUG
+ 		std::cout << "Top: " << std::endl;
+ 		_PrintLayer( _BroadSideTop ); std::cout << std::endl << std::endl;
+ 		std::cout << "Bottom: " << std::endl;
+ 		_PrintLayer( _BroadSideBottom ); std::cout << std::endl << std::endl;
+ 		std::cout << "Left: " << std::endl;
+ 		_PrintLayer( _BroadSideLeft ); std::cout << std::endl << std::endl;
+ 		std::cout << "Right: " << std::endl;
+ 		_PrintLayer( _BroadSideRight ); std::cout << std::endl << std::endl;
+ 		std::cout << std::endl;
+#endif  // BUG
+ 		for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 			( *_OppositeLeftSurface )[ _Index ][ 2 ] = 
+ 				_BroadSideTop[ _Index ];
+
+ 		for ( int _Index = 0; _Index < _Oders; _Index++ )
+ 			( *_OppositeRightSurface )[ _Index ][ 0 ] = 
+ 				_BroadSideBottom[ _Index ];
 		}
 
 	/* _RotateRight90Degree() function */
 	void _3x3RubikCube
 		::_RotateRight90Degree( _Surface& __surface )
 		{
-
+		/* This operation is equivalent to 
+		 * three "Rotate left 90 degree" */
+		for ( int _Index = 0; _Index < 3; _Index++ )
+			_RotateLeft90Degree( __surface );
 		}
 
 	/* _RotateLeft180Degree() function */
 	void _3x3RubikCube
 		::_RotateLeft180Degree( _Surface& __surface )
-		{
-
-		}
+		{ _DoRotate180Degree( __surface ); }
 
 	/* _RotateRight180Degree() function */
 	void _3x3RubikCube
 		::_RotateRight180Degree( _Surface& __surface )
-		{
+		{ _DoRotate180Degree( __surface ); }
 
+	/* _DoRotate180Degree() function */
+	void _3x3RubikCube::_DoRotate180Degree( _Surface& __surface )
+		{
+		/* Any "Do rotate 180 Degree" is equivalent to 
+		 * two "Rotate left 90 degree" */
+		for ( int _RotateTimes = 0; _RotateTimes < 2; _RotateTimes++ )
+			_RotateLeft90Degree( __surface );
 		}
 
 	/* _RotateLeft270Degree() function */
 	void _3x3RubikCube
 		::_RotateLeft270Degree( _Surface& __surface )
 		{
-
+		/* This operation is equivalent to 
+		 * three "Rotate left 90 degree" */
+		for ( int _RotateTimes = 0; _RotateTimes < 3; _RotateTimes++ )
+			_RotateLeft90Degree( __surface );
 		}
 
 	/* _RotateRight270Degree() function */
 	void _3x3RubikCube
 		::_RotateRight270Degree( _Surface& __surface )
 		{
-
+		/* This operation is equivalent to 
+		 * once "Rotate left 90 degree" */
+		_RotateLeft90Degree( __surface );
 		}
 
 	/* _GetSurfaceTopLayer() function */
@@ -391,7 +477,7 @@ _AbstractRubikCube::_RevoleDegree
 		case _SurfaceType::_Left:   return _GetSurfaceLeftLayer( m_TopSurface );
 		case _SurfaceType::_Right:  return _GetInvertLayer( _GetSurfaceRightLayer( m_TopSurface ) );
 		case _SurfaceType::_Top:    return _GetInvertLayer( m_RearSurface[ 0 ] );
-		case _SurfaceType::_Bottom: return _GetInvertLayer( m_FrontSurface[ 0 ] );
+		case _SurfaceType::_Bottom: return m_FrontSurface[ 2 ];
 			}
 		}
 
@@ -416,14 +502,34 @@ _AbstractRubikCube::_RevoleDegree
 	_3x3RubikCube::_Layer _3x3RubikCube
 		::_GetBroadSideLeftLayer( _Surface const& __surface ) const
 		{
+		_SurfaceType _CurrentSurfaceType = _GetSurfaceType( __surface );
 
+		switch ( _CurrentSurfaceType )
+			{
+		case _SurfaceType::_Front:  return _GetSurfaceRightLayer( m_LeftSurface );
+		case _SurfaceType::_Rear:   return _GetSurfaceRightLayer( m_RightSurface );
+		case _SurfaceType::_Left:   return _GetSurfaceRightLayer( m_RearSurface );
+		case _SurfaceType::_Right:  return _GetSurfaceRightLayer( m_FrontSurface );
+		case _SurfaceType::_Top:	return m_LeftSurface[ 0 ];
+		case _SurfaceType::_Bottom: return _GetInvertLayer( m_LeftSurface[ 2 ] );
+			}
 		}
 
 	/* _GetBroadSideRightLayer() function */
 	_3x3RubikCube::_Layer _3x3RubikCube
 		::_GetBroadSideRightLayer( _Surface const& __surface ) const
 		{
+		_SurfaceType _CurrentSurfaceType = _GetSurfaceType( __surface );
 
+		switch ( _CurrentSurfaceType )
+			{
+		case _SurfaceType::_Front:  return _GetSurfaceLeftLayer( m_RightSurface );
+		case _SurfaceType::_Rear:   return _GetSurfaceLeftLayer( m_LeftSurface );
+		case _SurfaceType::_Left:   return _GetSurfaceLeftLayer( m_FrontSurface );
+		case _SurfaceType::_Right:  return _GetSurfaceLeftLayer( m_RearSurface );
+		case _SurfaceType::_Top:	return _GetInvertLayer( m_RightSurface[ 0 ] );
+		case _SurfaceType::_Bottom: return m_RightSurface[ 2 ];
+			}
 		}
 
 	/* _GetInvertLayer() function */
